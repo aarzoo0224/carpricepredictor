@@ -1,0 +1,201 @@
+Importing the Dependencies
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Lasso
+from sklearn import metrics
+
+Data Collection and Processing
+
+from google.colab import files
+uploaded = files.upload()
+print(uploaded)
+
+# from google.colab import files
+# uploaded = files.upload()
+# print(uploaded)
+
+# loading the data from csv file to pandas dataframe
+car_dataset = pd.read_csv('/content/car1price.csv')
+
+# inspecting the first 5 rows of the dataframe
+car_dataset.head()
+
+car_dataset.columns
+
+# checking the number of rows and columns
+car_dataset.shape
+
+# getting some information about the dataset
+car_dataset.info()
+
+# checking the number of missing values
+car_dataset.isnull().sum()
+
+# checking the distribution of categorical data
+print(car_dataset.Fuel_Type.value_counts())
+print(car_dataset.Seller_Type.value_counts())
+print(car_dataset.Transmission.value_counts())
+
+Encoding the Categorical Data
+
+# encoding "Fuel_Type" Column
+car_dataset.replace({'Fuel_Type':{'Petrol':0,'Diesel':1,'CNG':2}},inplace=True)
+
+# encoding "Seller_Type" Column
+car_dataset.replace({'Seller_Type':{'Dealer':0,'Individual':1}},inplace=True)
+
+# encoding "Transmission" Column
+car_dataset.replace({'Transmission':{'Manual':0,'Automatic':1}},inplace=True)
+
+car_dataset.head()
+
+Splitting the data and Target
+
+X = car_dataset.drop(['Car_Name','Selling_Price'],axis=1)
+Y = car_dataset['Selling_Price']
+
+print(X)
+
+print(Y)
+
+Splitting Training and Test data
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.1, random_state=2)
+
+Model Training
+
+1. Linear Regression
+
+# loading the linear regression model
+lin_reg_model = LinearRegression()
+
+lin_reg_model.fit(X_train,Y_train)
+
+Model Evaluation
+
+# prediction on Training data
+training_data_prediction = lin_reg_model.predict(X_train)
+
+# R squared Error
+error_score = metrics.r2_score(Y_train, training_data_prediction)
+print("R squared Error : ", error_score)
+
+Visualize the actual prices and Predicted prices
+
+plt.scatter(Y_train, training_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+
+# prediction on Training data
+test_data_prediction = lin_reg_model.predict(X_test)
+
+
+
+# R squared Error
+error_score = metrics.r2_score(Y_test, test_data_prediction)
+print("R squared Error : ", error_score)
+
+plt.scatter(Y_test, test_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+
+2. Lasso Regression
+
+# loading the linear regression model
+lass_reg_model = LinearRegression()
+
+lass_reg_model.fit(X_train,Y_train)
+
+Model Evaluation
+
+# prediction on Training data
+training_data_prediction = lass_reg_model.predict(X_train)
+
+# R squared Error
+error_score = metrics.r2_score(Y_train, training_data_prediction)
+print("R squared Error : ", error_score)
+
+
+
+car_dataset.head()
+
+
+
+
+Visualize the actual prices and Predicted prices
+
+plt.scatter(Y_train, training_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+
+# prediction on Training data
+test_data_prediction = lass_reg_model.predict(X_test)
+
+# prompt: predict the results of the dataset
+
+# R squared Error
+error_score = metrics.r2_score(Y_test, test_data_prediction)
+print("R squared Error : ", error_score)
+plt.scatter(Y_test, test_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+
+
+# R squared Error
+error_score = metrics.r2_score(Y_test, test_data_prediction)
+print("R squared Error : ", error_score)
+
+plt.scatter(Y_test, test_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+
+# prompt: show the full data of owner
+
+car_dataset['Owner'].value_counts()
+
+
+
+
+
+# code to predict the Selling_Price of the car
+
+# Get the user input for the car features
+Year = int(input("Enter the Year of Manufacture: "))
+Present_Price = float(input("Enter the Current Price of the Car: "))
+Kms_Driven = int(input("Enter the Kilometers Driven: "))
+Fuel_Type = int(input("Enter the Fuel Type (0 for Petrol, 1 for Diesel, 2 for CNG): "))
+Seller_Type = int(input("Enter the Seller Type (0 for Dealer, 1 for Individual): "))
+Transmission = int(input("Enter the Transmission (0 for Manual, 1 for Automatic): "))
+Owner = int(input("Enter the Number of Owners:(0,1,2,3) "))
+
+# Create a new row with the user input
+new_row = {'Year': Year, 'Present_Price': Present_Price, 'Kms_Driven': Kms_Driven, 'Fuel_Type': Fuel_Type, 'Seller_Type': Seller_Type, 'Transmission': Transmission, 'Owner': Owner}
+
+# Convert the new row to a DataFrame
+new_row_df = pd.DataFrame(new_row, index=[0])
+
+# Predict the selling price of the car
+predicted_price = lin_reg_model.predict(new_row_df)[0]
+
+# Print the predicted selling price
+print(f"The predicted selling price of the car is: {predicted_price}")
+
+
+
+
+from google.colab import drive
+drive.mount('/content/drive')
